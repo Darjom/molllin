@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "940301081854",
+    "project_id": "mollin-c86c6",
+    "storage_bucket": "mollin-c86c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940301081854:android:1e61c4b5e76eadde8159af",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-93PFo2XpV70EKDXdZKQduCVj8jRvsUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,8 +12,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.presentation.screen.index.IndexScreen
+import com.example.myapplication.presentation.screen.login.LoginScreen
+import com.example.myapplication.presentation.screen.register.RegisterScreen
+import com.example.myapplication.presentation.screen.home.HomeScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +32,27 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
-    Surface(color = Color.Transparent) {
-        NavHost(
-            navController  = navController,
-            startDestination = "index"
-        ) {
-            composable("index") {
-                IndexScreen(navController)
-            }
+    NavHost(
+        navController  = navController,
+        startDestination = "index"
+    ) {
+        composable("index") {
+            IndexScreen(navController)
         }
+        composable("login") {
+            LoginScreen(navController)
+        }
+        composable("register") {
+            RegisterScreen(navController)
+        }
+        composable("home") {
+            HomeScreen()
+        }
+
     }
 }
 

@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")                                  // Para procesar anotaciones
+    id("com.google.dagger.hilt.android")            // Hilt en este módulo :contentReference[oaicite:2]{index=2}
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -57,5 +60,24 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.navigation:navigation-compose:2.6.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    // Firebase BOM, Auth y Firestore
+    implementation("com.google.firebase:firebase-bom:33.16.0")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Hilt Runtime & Compiler
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-compiler:2.47")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.compose.material3:material3:1.2.0")
+
+
+    // Otros (Lifecycle, Activity, etc.)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
 
 }
