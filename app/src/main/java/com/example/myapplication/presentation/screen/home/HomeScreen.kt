@@ -29,12 +29,13 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.navigation.NavController
 import com.example.myapplication.ui.theme.GrisClaroNeutro
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel()) {
     val scope = rememberCoroutineScope()
     val modalState = rememberModalBottomSheetState()
 
@@ -53,7 +54,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* TODO: Navegar al carrito */ }) {
+                IconButton(onClick = { navController.navigate("cart") }) {
                     BadgedBox(badge = {
                         if (cartCount > 0) {
                             Badge { Text(cartCount.toString()) }

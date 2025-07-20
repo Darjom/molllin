@@ -50,7 +50,7 @@ fun AppNav() {
             RegisterScreen(navController)
         }
         composable("home") {
-            HomeScreen()
+            HomeScreen(navController)
         }
 
     }
