@@ -17,6 +17,7 @@ data class RegisterUiState(
     val email: String = "",
     val password: String = "",
     val address: String = "",
+    val phone: String = "",
     val error: String? = null,
     val isLoading: Boolean = false
 )
@@ -34,6 +35,7 @@ class RegisterViewModel @Inject constructor(
     fun onEmailChange(email: String) = _uiState.update { it.copy(email = email) }
     fun onPasswordChange(pw: String) = _uiState.update { it.copy(password = pw) }
     fun onAddressChange(addr: String) = _uiState.update { it.copy(address = addr) }
+    fun onPhoneChange(phone: String) = _uiState.update { it.copy(phone = phone) }
 
     fun onRegisterClick(onSuccess: () -> Unit) {
         val state = _uiState.value
@@ -54,7 +56,8 @@ class RegisterViewModel @Inject constructor(
                     val userMap = mapOf(
                         "fullName" to state.fullName,
                         "email" to state.email,
-                        "address" to state.address
+                        "address" to state.address,
+                        "phone" to state.phone
                     )
                     db.collection("users")
                         .document(uid)
