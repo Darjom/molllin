@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,8 +27,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mollin.app.domain.order.CartItem
 import com.mollin.app.presentation.screen.cart.CartViewModel
-import com.mollin.app.ui.theme.GrisClaroNeutro
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.isSystemInDarkTheme
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,10 +45,14 @@ fun HomeScreen(
     val cartItems by cartViewModel.cartItems.collectAsState()
     val cartCount = cartItems.size
 
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundColor = if (isDarkTheme) Color.Black else Color.White
+    val textColor = if (isDarkTheme) Color.White else Color.Black
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(GrisClaroNeutro)
+            .background(backgroundColor)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
@@ -65,7 +71,7 @@ fun HomeScreen(
                     }
                 ) {
                     IconButton(onClick = { navController.navigate("cart") }) {
-                        Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", tint = textColor)
                     }
                 }
             }
@@ -74,6 +80,7 @@ fun HomeScreen(
                 "Nuestros Productos",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
+                color = textColor,
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
 
@@ -92,7 +99,6 @@ fun HomeScreen(
                             scope.launch { modalState.show() }
                         }
                     }
-
                 }
             }
         }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,12 +34,14 @@ import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(
-    viewModel: CartViewModel = viewModel()
-) {
+fun CartScreen(viewModel: CartViewModel = viewModel()) {
     val context = LocalContext.current
     val cartItems by viewModel.cartItems.collectAsState()
     val total = cartItems.sumOf { it.total }
+
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundColor = if (isDarkTheme) Color.Black else Color.White
+    val textColor = if (isDarkTheme) Color.White else Color.Black
 
     // Cargar usuario desde Room
     val userViewModel: UserViewModel = viewModel(
@@ -63,7 +66,7 @@ fun CartScreen(
                             )
                             viewModel.placeOrder(user) { message ->
                                 val encoded = URLEncoder.encode(message, "UTF-8")
-                                val uri = Uri.parse("https://wa.me/+59163744948?text=$encoded")
+                                val uri = Uri.parse("https://wa.me/+59175483831?text=$encoded")
                                 context.startActivity(Intent(Intent.ACTION_VIEW, uri))
                             }
                         },
@@ -82,18 +85,19 @@ fun CartScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color.White)
+                .background(backgroundColor)
         ) {
             Text(
                 "Carrito de compras",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                color = textColor,
                 modifier = Modifier.padding(16.dp)
             )
 
             if (cartItems.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No hay productos en el carrito", fontSize = 16.sp)
+                    Text("No hay productos en el carrito", fontSize = 16.sp, color = textColor)
                 }
             } else {
                 LazyColumn(
@@ -102,7 +106,9 @@ fun CartScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     items(cartItems) { item ->
-                        CartItemCard(item = item) { viewModel.removeFromCart(item) }
+                        CartItemCard(item = item, textColor = textColor) {
+                            viewModel.removeFromCart(item)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -110,8 +116,8 @@ fun CartScreen(
                     "Total: $total Bs",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(16.dp)
+                    color = textColor,
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
@@ -119,7 +125,7 @@ fun CartScreen(
 }
 
 @Composable
-fun CartItemCard(item: CartItem, onRemove: () -> Unit) {
+fun CartItemCard(item: CartItem, textColor: Color, onRemove: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -134,9 +140,9 @@ fun CartItemCard(item: CartItem, onRemove: () -> Unit) {
             )
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(item.name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("Cantidad: ${item.quantity}", fontSize = 16.sp)
-                Text("Precio: ${item.total} Bs", fontSize = 16.sp)
+                Text(item.name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = textColor)
+                Text("Cantidad: ${item.quantity}", fontSize = 16.sp, color = textColor)
+                Text("Precio: ${item.total} Bs", fontSize = 16.sp, color = textColor)
             }
 
             Icon(

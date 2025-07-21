@@ -2,12 +2,7 @@ package com.mollin.app.presentation.screen.register
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,57 +23,100 @@ import com.mollin.app.ui.theme.VerdeMolleOscuro
 fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
 
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black,
+        cursorColor = Color.Black,
+        focusedLabelColor = Color.Gray,
+        unfocusedLabelColor = Color.Gray,
+        focusedBorderColor = Color.Gray,
+        unfocusedBorderColor = Color.LightGray
+    )
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(modifier = Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.Center) {
-            Text("Regístrate", modifier = Modifier.padding(bottom = 16.dp), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                "Regístrate",
+                modifier = Modifier.padding(bottom = 16.dp),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             // Nombre
             OutlinedTextField(
-                value = state.fullName, onValueChange = viewModel::onNameChange,
-                label = { Text("Nombre Completo") }, modifier = Modifier.fillMaxWidth()
+                value = state.fullName,
+                onValueChange = viewModel::onNameChange,
+                label = { Text("Nombre Completo") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             Spacer(Modifier.height(8.dp))
 
             // Correo
             OutlinedTextField(
-                value = state.email, onValueChange = viewModel::onEmailChange,
-                label = { Text("Correo") }, modifier = Modifier.fillMaxWidth()
+                value = state.email,
+                onValueChange = viewModel::onEmailChange,
+                label = { Text("Correo") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             Spacer(Modifier.height(8.dp))
 
             // Contraseña
             OutlinedTextField(
-                value = state.password, onValueChange = viewModel::onPasswordChange,
-                label = { Text("Contraseña") }, visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                value = state.password,
+                onValueChange = viewModel::onPasswordChange,
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             Spacer(Modifier.height(8.dp))
 
             // Dirección
             OutlinedTextField(
-                value = state.address, onValueChange = viewModel::onAddressChange,
-                label = { Text("Dirección") }, modifier = Modifier.fillMaxWidth()
+                value = state.address,
+                onValueChange = viewModel::onAddressChange,
+                label = { Text("Dirección") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             Spacer(Modifier.height(8.dp))
 
             // Teléfono
             OutlinedTextField(
-                value = state.phone, onValueChange = viewModel::onPhoneChange,
-                label = { Text("Teléfono") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier.fillMaxWidth()
+                value = state.phone,
+                onValueChange = viewModel::onPhoneChange,
+                label = { Text("Teléfono") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             Spacer(Modifier.height(16.dp))
-            Button(onClick = { viewModel.onRegisterClick { navController.popBackStack() } },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = VerdeMolleOscuro, contentColor = Blanco)
+            Button(
+                onClick = { viewModel.onRegisterClick { navController.popBackStack() } },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = VerdeMolleOscuro,
+                    contentColor = Blanco
+                )
             ) {
                 Text("REGISTRARSE")
             }
 
             Spacer(Modifier.height(12.dp))
             if (state.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            state.error?.let { Text(it, color = Color.Red, modifier = Modifier.padding(top = 8.dp)) }
+            state.error?.let {
+                Text(it, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+            }
         }
     }
 }
