@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "com.mollin.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.mollin.app"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "940301081854",
+    "firebase_url": "https://mollin-c86c6-default-rtdb.firebaseio.com",
     "project_id": "mollin-c86c6",
     "storage_bucket": "mollin-c86c6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:940301081854:android:1e61c4b5e76eadde8159af",
+        "mobilesdk_app_id": "1:940301081854:android:8e5abb73fa84a30d8159af",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.mollin.app"
         }
       },
       "oauth_client": [],
