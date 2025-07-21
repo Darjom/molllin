@@ -1,5 +1,6 @@
 package com.mollin.app.presentation.user
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mollin.app.data.user.UserEntity
@@ -16,6 +17,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     fun loadUser(uid: String) {
         viewModelScope.launch {
             val fetchedUser = repository.getUser(uid)
+            Log.d("UserVM", "loadUser fetched: $fetchedUser")
             _user.value = fetchedUser
         }
     }

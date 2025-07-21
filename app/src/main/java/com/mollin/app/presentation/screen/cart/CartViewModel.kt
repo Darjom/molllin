@@ -42,7 +42,6 @@ class CartViewModel(
                 items = _cartItems.value,
                 totalAmount = totalAmount
             )
-
             val success = orderRepository.uploadOrder(order)
             _orderSuccess.value = success
 
@@ -61,11 +60,9 @@ class CartViewModel(
         builder.append("Número de celular: ${order.user.phone}\n")
         builder.append("Dirección: ${order.user.address}\n")
         builder.append("\nOrden:\n")
-
         order.items.forEach {
             builder.append("- ${it.name} x${it.quantity} → ${it.total} Bs\n")
         }
-
         builder.append("\nTotal a pagar: ${order.totalAmount} Bs")
         return builder.toString()
     }

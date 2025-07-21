@@ -3,16 +3,14 @@ package com.mollin.app.presentation.screen.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.mollin.app.data.user.UserEntity
+import com.mollin.app.data.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * UI state for the Login screen.
- */
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
@@ -20,16 +18,15 @@ data class LoginUiState(
     val error: String? = null
 )
 
-/**
- * ViewModel handling user login via FirebaseAuth.
- */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+    private val userRepo: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun onEmailChange(newEmail: String) {
         _uiState.update { it.copy(email = newEmail, error = null) }
@@ -39,23 +36,45 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(password = newPassword, error = null) }
     }
 
-    /**
-     * Attempt to log in the user with FirebaseAuth.
-     * @param onSuccess callback invoked when login succeeds.
-     */
     fun onLoginClick(onSuccess: () -> Unit) {
-        val state = _uiState.value
-        if (state.email.isBlank() || state.password.isBlank()) {
+        val current = _uiState.value
+
+        if (current.email.isBlank() || current.password.isBlank()) {
             _uiState.update { it.copy(error = "Completa el correo y la contraseña") }
             return
         }
 
         _uiState.update { it.copy(isLoading = true, error = null) }
+
         viewModelScope.launch {
-            auth.signInWithEmailAndPassword(state.email, state.password)
-                .addOnSuccessListener {
-                    _uiState.update { it.copy(isLoading = false) }
-                    onSuccess()
+            auth.signInWithEmailAndPassword(current.email, current.password)
+                .addOnSuccessListener { result ->
+                    val firebaseUser = result.user ?: return@addOnSuccessListener
+
+                    db.collection("users").document(firebaseUser.uid)
+                        .get()
+                        .addOnSuccessListener { doc ->
+                            val name = doc.getString("fullName") ?: ""
+                            val email = doc.getString("email") ?: ""
+                            val address = doc.getString("address") ?: ""
+                            val phone = doc.getString("phone") ?: ""
+
+                            viewModelScope.launch {
+                                userRepo.insert(
+                                    UserEntity(
+                                        uid = firebaseUser.uid,
+                                        name = name,
+                                        phone = phone,
+                                        address = address
+                                    )
+                                )
+                                _uiState.update { it.copy(isLoading = false) }
+                                onSuccess()
+                            }
+                        }
+                        .addOnFailureListener { ex ->
+                            _uiState.update { it.copy(isLoading = false, error = ex.localizedMessage) }
+                        }
                 }
                 .addOnFailureListener { ex ->
                     _uiState.update { it.copy(isLoading = false, error = ex.localizedMessage) }
